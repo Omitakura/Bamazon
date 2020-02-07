@@ -2,12 +2,12 @@ var mysql = require("mysql");
 var inquirer = require("inquirer");
 var Table = require("cli-table");
 
-var conection = mysql.createConnection({
+var connection = mysql.createConnection({
     host: "localhost",
     port: 3306,
     user: "root",
     password: "",
-    database: "bamazon"
+    database: "Bamazon"
 });
 
 connection.connect(function (err) {
@@ -60,6 +60,11 @@ function purchaseOrder(ID, amtNeeded) {
             var totalCost = res[0].price * amtNeeded;
             console.log("Enough units are in stock for you!");
             console.log("Your total cost for " + amtNeeded + " " + res[0].product_name + "is" + totalCost + "Thanks for coming!");
-        }
-    })
-}
+            connection.query("UPDATE products SET stock_quantity = stock_quantity - " + amtNeeded + "WHERE item_id = " + ID);
+        } else {
+            console.log("Apologies, not enough " + res[0].products_name + "to complete the order.");
+
+        };
+        displayProducts();
+    });
+};
