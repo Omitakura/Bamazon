@@ -112,7 +112,7 @@ function addRequest() {
         },
 
     ]).then(function (answers) {
-        var id = answers.Id;
+        var id = answers.ID;
         var name = answers.Name;
         var category = answers.Category;
         var price = answers.Price;
@@ -122,12 +122,8 @@ function addRequest() {
 };
 
 function buildNewItem(id, name, category, price, quantity) {
-    connection.query(`
-                        INSERT INTO 
-                                products (item_id, product_name, department_name, price, stock_quantity) 
-                        VALUES 
-                                ( ${id}, ${name}, ${category}, ${price}, ${quantity} )
-                                `, console.log('Posted'));
+    console.log(id);
+    connection.query("INSERT INTO products (item_id, product_name, department_name, price, stock_quantity) VALUES (?, ?, ?, ?, ?)", [id, name, category, price, quantity]);
     displayInventory();
 };
 

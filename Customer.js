@@ -55,15 +55,19 @@ function purchasePrompt() {
     });
 };
 
-function purchaseOrder(ID, amtNeeded) {
-    connection.query('Select * FROM products WHERE item_id = ' + ID, function (err, res) {
+function purchaseOrder(IDrequested, quantityNeeded) {
+    connection.query('Select * FROM products WHERE item_id = ' + IDrequested, function (err, res) {
         if (err) { console.log(err) };
-        if (amtNeeded <= res[0].stock_quantity) {
-            var totalCost = res[0].price * amtNeeded;
+        if (quantityNeeded <= res[0].stock_quantity) {
+            var totalCost = res[0].price * quantityNeeded;
             console.log("Good news your order is in stock!");
-            console.log("Your total cost for " + amtNeeded + " " + res[0].product_name + " is " + totalCost + " Thank you!");
-
-            connection.query("UPDATE products SET stock_quantity = stock_quantity - " + amtNeeded + "WHERE item_id = " + ID);
+            console.log("Your total cost for " + quantityNeeded + " " + res[0].product_name + " is " + totalCost + " Thank you!");
+            console.log(IDrequested);
+            console.log(quantityNeeded);
+            var totalQuantity = res[0].stock_quantity;
+            console.log(totalQuantity);
+            var newQuantity = totalQuantity - quantityNeeded;
+            connection.query("UPDATE products SET stock_quantity = " + newQuantity + " WHERE item_id = " + IDrequested + "");
         } else {
             console.log("Insufficient quantity, sorry we do not have enough " + res[0].product_name + "to complete your order.");
         };
