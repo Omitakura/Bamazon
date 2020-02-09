@@ -1,0 +1,22 @@
+{
+  "name": "bamazon",
+  "version": "1.0.0",
+  "description": "In this activity, I'll be creating an Amazon-like storefront with the MySQL skills I learned from KU Bootcamp. The app will take in orders from customers and deplete stock from the store's inventory.",
+  "main": "Customer.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Omitakura/Bamazon.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/Omitakura/Bamazon/issues"
+  },
+  "homepage": "https://github.com/Omitakura/Bamazon#readme",
+  "dependencies": {
+    "parser": "^0.1.4"
+  }
+}

@@ -6,14 +6,15 @@ var connection = mysql.createConnection({
     host: "localhost",
     port: 3306,
     user: "root",
-    password: "",
-    database: "Bamazon"
+    password: "password",
+    database: "bamazon"
 });
 
 connection.connect(function (err) {
     if (err) throw err;
     console.log("connected as id" + connection.threadId);
 });
+
 function displayInventory() {
     connection.query('SELECT * FROM Products', function (err, res) {
         if (err) { console.log(err) };
@@ -35,7 +36,7 @@ function inquirerForUpdates() {
     inquirer.prompt([{
         name: "action",
         type: "list",
-        message: "choose an option below to manage current inventory:",
+        message: "Choose an option below to manage current inventory:",
         choices: ["Restock Inventory", "Add New Product", "Remove An Existing Product"]
     }]).then(function (answers) {
         switch (answers.action) {
@@ -57,12 +58,12 @@ function restockRequest() {
         {
             name: "ID",
             type: "input",
-            message: "Please provide the number of the item you would like to restock"
+            message: "What is the item number of the item you would like to restock?"
         },
         {
             name: "Quantity",
             type: "input",
-            message: "Provide the amount you would like to add"
+            message: "What is the quantity you would like to add?"
         },
     ]).then(function (answers) {
         var quantityAdded = answers.Quantity;
@@ -74,7 +75,7 @@ function restockRequest() {
 function restockInventory(id, quant) {
     connection.query('SELECT * FROM Products WHERE item_id = ' + id, function (err, res) {
         if (err) { console.log(err) };
-        connection.query('UPDATE Products SET stock_quantity = stock_quantity + ' + stock_quantity + 'WHERE item_id =' + item_id);
+        connection.query('UPDATE Products SET stock_quantity = stock_quantity + ' + quant + ' WHERE item_id = ' + res[0].item_id);
 
         displayInventory();
     });
@@ -82,31 +83,33 @@ function restockInventory(id, quant) {
 
 function addRequest() {
     inquirer.prompt([
+
         {
             name: "ID",
             type: "input",
             message: "Add ID Number"
+
         },
         {
             name: "Name",
             type: "input",
-            message: "What is name of the product you would like to restock?"
+            message: "What is name of product you would like to stock?"
         },
         {
             name: "Category",
             type: "input",
-            message: "What is the category for the product"
+            message: "What is the category for product?"
         },
         {
             name: "Price",
             type: "input",
-            message: "What is the price for the item"
+            message: "What is the price for item?"
         },
         {
             name: "Quantity",
             type: "input",
-            message: "How much would you like to add"
-        }
+            message: "What is the quantity you would like to add?"
+        },
 
     ]).then(function (answers) {
         var id = answers.Id;
@@ -118,8 +121,13 @@ function addRequest() {
     });
 };
 
-function buildNewItem(name, category, price, quantity) {
-    connection.query('INSERT INTO products (item_id,product_name,department_name,price,stock_quantity) VALUES("' + id + '","' + name + '", "' + category + '",' + price + ',' + quantity + ')');
+function buildNewItem(id, name, category, price, quantity) {
+    connection.query(`
+                        INSERT INTO 
+                                products (item_id, product_name, department_name, price, stock_quantity) 
+                        VALUES 
+                                ( ${id}, ${name}, ${category}, ${price}, ${quantity} )
+                                `, console.log('Posted'));
     displayInventory();
 };
 
@@ -127,8 +135,8 @@ function removeRequest() {
     inquirer.prompt([{
         name: "ID",
         type: "input",
-        message: "What is the number of the item you would like to remove?"
-    }]).then(function (answer) {
+        message: "What is the item number of the item you would like to remove?"
+    }]).then(function (answers) {
         var id = answers.ID;
         removeInventory(id);
     });
